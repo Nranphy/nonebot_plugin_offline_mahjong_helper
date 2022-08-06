@@ -24,6 +24,8 @@ try:
 except:
     logger.error("[约桌功能] 创建牌桌数据目录失败...")
 
+# 预约牌桌是否分群
+offline_mahjong_group_divide = get_driver().config.offline_mahjong_group_divide if hasattr(get_driver().config, "offline_mahjong_group_divide") else 1
 
 
 def appoint_create(creator, group, place:str, date:str, qqs:list = [], sta_time:str="未定时间", end_time:str="未定时间", notes:str="无备注") -> Tuple[bool,Union[str,dict]]:
@@ -87,12 +89,14 @@ def select_table(creator:Union[str,int]=None, group:Union[str,int]=None, place:s
             continue
         if creator and ((creator.isdigit() and int(creator) != temp_data["creator"]) or (creator not in get_group_member_card(group,temp_data["creator"]))):
             continue
-        if group and int(group) != temp_data["group"]:
-            continue
+        if offline_mahjong_group_divide:
+            if group and int(group) != temp_data["group"]:
+                continue
         if place and place not in temp_data["place"]:
             continue
         if date and date != temp_data["date"]:
             continue
+        # 还未做通过QQ查询牌桌的功能
         # qqs = [int(qq) for qq in qqs]
         # if not set(qqs).issubset(set(temp_data["qqs"])):
         #     continue
