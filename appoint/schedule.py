@@ -2,7 +2,7 @@
 
 from nonebot import get_bot, get_driver, require
 from nonebot.log import logger
-from .utils import at_all_joiner, data_path, delete_table, get_joiner_number, get_now_date, read_table
+from .utils import at_all_joiner, valid_path, delete_table, get_joiner_number, get_now_date, read_table
 
 
 try:
@@ -15,7 +15,7 @@ async def check_table_everyday():
     '''每天定时at提醒当天牌局并删除过期牌局'''
     now_date = get_now_date()
     bot = get_bot()
-    for path in data_path.iterdir():
+    for path in valid_path.iterdir():
         temp_info = read_table(path)
         if now_date > temp_info["date"]:
             delete_table(path)
