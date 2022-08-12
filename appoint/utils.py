@@ -26,6 +26,8 @@ except:
 
 # 预约牌桌是否分群
 offline_mahjong_group_divide = get_driver().config.offline_mahjong_group_divide if hasattr(get_driver().config, "offline_mahjong_group_divide") else 1
+# 加入牌桌上限人数，0为无限制
+offline_mahjong_join_limit = get_driver().config.offline_mahjong_join_limit if hasattr(get_driver().config, "offline_mahjong_join_limit") else 4
 
 
 def appoint_create(creator, group, place:str, date:str, qqs:list = [], sta_time:str="未定时间", end_time:str="未定时间", notes:str="无备注") -> Tuple[bool,Union[str,dict]]:
@@ -117,8 +119,9 @@ def join_table(joiner,table:str) -> Tuple[bool,Union[str,dict]]:
         return (False,"解析牌桌文件时出错...")
         
     try:
-        if len(origin_data["qqs"])>4:
-            return (False,"牌桌人数已满四人...")
+        if offline_mahjong_join_limit:
+            if len(origin_data["qqs"])>=offline_mahjong_join_limit:
+                return (False,f"牌桌人数已满{offline_mahjong_join_limit}人...")
         if int(joiner) in origin_data["qqs"]:
             return (False,"加入者已在牌桌中...")
         origin_data["qqs"].append(int(joiner))
@@ -246,7 +249,7 @@ async def get_group_member_card(group_id:Union[int,str], user_id:Union[int,str],
     bot = get_bot()
     group_id,user_id = int(group_id),int(user_id)
     try:
-        info = await bot.call_api("get_group_member_info",group_id=group_id,user_id=user_id,no_cache=no_cache)
+        info = await bot.call_api("get_group_member_info",group_id=group_id, user_id=user_id, no_cache=no_cache)
         return info["card"]
     except:return "隔壁牌友"
 
