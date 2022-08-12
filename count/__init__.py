@@ -1,4 +1,68 @@
+from nonebot import on_command, require, get_bot, get_driver
+from nonebot.typing import T_State
+from nonebot.params import State
+from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment
+from nonebot.log import logger
 
+
+
+
+actuarial_point = on_command("计分", aliases={"精算","精算点"}, priority=10,block=True)
+
+han_fu_2_point = on_command("算点",aliases={"算分"} ,priority=10,block=True)
+
+
+# 将符和番输入得到点数
+@han_fu_2_point.handle()
+async def parse1(bot:Bot, event:Event, state:T_State = State()):
+    msg = str(event.get_message()).split()
+    try:
+        state["han"] = min(int(msg[1]),int(msg[2]))
+        state["fu"] = max(int(msg[1]),int(msg[2]))
+    except Exception:
+        await han_fu_2_point.finish("\n番、符输入格式有误×\n请检查是否用空格分隔指令。\n例：/算点 4 40", at_sender = True)
+
+@han_fu_2_point.handle()
+async def han_fu_2_point_action(bot:Bot, event:Event, state:T_State = State()):
+    temp = point_counter(state["fu"], state["han"])
+    if temp[0]:
+        msg = f"\n点数计算成功√\n==={temp[3]}===\n【亲家和牌】荣和 {temp[1][0]} ，自摸 {temp[1][1]} \n【子家和牌】荣和 {temp[2][0]} ，自摸 {temp[2][1]} \n===计算完成~==="
+    else:
+        msg = f"\n点数计算成功√\n===查表失败===\n或因为指定符番组合不存在。\n已按计算规则进行计算：\n【亲家得点】 {temp[1]}\n【子家得点】 {temp[2]}\n===计算完成~==="
+    await han_fu_2_point.finish(msg , at_sender = True)
+
+
+
+# 精算点计算
+@actuarial_point.handle()
+async def parse2(bot:Bot, event:Event, state:T_State = State()):
+    try:
+        temp = str(event.get_message()).split()[1:]
+        temp = sorted([int(x) for x in temp], reverse=True)
+        if sum(temp) != 100000:
+            raise AssertionError
+        if len(temp) != 4:
+            raise IndexError
+        state["point"] = temp
+    except AssertionError:
+        await actuarial_point.finish("\n计分指令格式有误×\n请检查点数和是否为100000（采用起始点数25000的规则）。\n例：/计分 31000 24000 27000 18000", at_sender = True)
+    except Exception:
+        await actuarial_point.finish("\n计分指令格式有误×\n请检查点数个数并用空格分隔指令。\n例：/计分 31000 24000 27000 18000", at_sender = True)
+
+@actuarial_point.handle()
+async def jisuan(bot:Bot, event:Event, state:T_State = State()):
+    shunweimadian = [+15,+5,-5,-15]
+    state["ac_point"] = list() # 记录精算点的列表
+    for i in range(4):
+        state["ac_point"].append((state["point"][i]-25000)/1000 + shunweimadian[i])
+    await actuarial_point.send(
+'\n精算点计算成功~\n=========\n\
+【一位马点】 {:+}\n\
+【二位马点】 {:+}\n\
+【三位马点】 {:+}\n\
+【四位马点】 {:+}\n\
+=========\n采用雀魂马点计算规则，\n\
+精算原点25000，顺位马+15、+5、-5、-15。'.format(state["ac_point"][0], state["ac_point"][1], state["ac_point"][2], state["ac_point"][3]), at_sender = True)
 
 
 
