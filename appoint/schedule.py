@@ -32,9 +32,9 @@ async def check_table_everyday():
 time_list = get_driver().config.offline_mahjong_remind_time if hasattr(get_driver().config, "offline_mahjong_remind_time") else list()
 
 try:
-    for index, time in enumerate(time_list):
-        scheduler.add_job(check_table_everyday, "cron", hour=time["HOUR"], minute=time["MINUTE"], id=f"mahjong_appoint_check_{time['HOUR']}")
-        logger.info(f"[面麻助手] 新建计划任务成功！！  id:mahjong_appoint_check_{time['HOUR']},时间为{time['HOUR']}时{time['MINUTE']}分.")
+    for index, single_time in enumerate(time_list):
+        scheduler.add_job(check_table_everyday, "cron", hour=single_time["HOUR"], minute=single_time["MINUTE"], id=f"mahjong_appoint_check_{single_time['HOUR']}")
+        logger.info(f"[面麻助手] 新建计划任务成功！！  id:mahjong_appoint_check_{single_time['HOUR']},时间为{single_time['HOUR']}时{single_time['MINUTE']}分.")
 except TypeError:
     logger.error("[面麻助手] 插件定时发送相关设置有误，请检查.env.*文件。")
 

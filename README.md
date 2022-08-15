@@ -16,7 +16,7 @@
 1） 通过`git clone`将本仓库下的插件部署在你的bot插件目录下。
 
 2） 可在机器人根目录下的.env中加入以下内容，缺失的内容将使用插件的默认配置：
-```json
+```
 #mahjong
 ## 约桌每日提醒时间
 offline_mahjong_remind_time = [{"HOUR":8,"MINUTE":0},{"HOUR":10,"MINUTE":0},{"HOUR":12,"MINUTE":0}]
