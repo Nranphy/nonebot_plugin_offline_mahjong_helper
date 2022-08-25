@@ -1,5 +1,5 @@
 # nonebot_plugin_offline_mahjong_helper
-## 基于NoneBot2的面麻助手插件
+## 基于nonebot2可约桌、算点、查询的面麻助手。
 
 * * *
 
