@@ -129,6 +129,7 @@ async def data2pic(nickname:str,userdata_pl4:dict,userdata_pl3:dict) -> bytes:
     for key in data_keys:
         if key=='count':
             mdstr += f"\n| **记录对局数** | {userdata_pl4.get(key,'未找到')} | {userdata_pl3.get(key,'未找到')} |"
+            continue
         elif key in ['最近大铳','id','played_modes']:
             continue
         mdstr += f"\n| {key} | {userdata_pl4.get(key,'未找到')} | {userdata_pl3.get(key,'未找到')} |"
