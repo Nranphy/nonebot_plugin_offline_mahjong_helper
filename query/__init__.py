@@ -116,7 +116,8 @@ async def majsoul_query_precess(bot: Bot, event: Event, state:T_State=State()):
     
     await majsoul_query.finish(MessageSegment.text(f"""
 【昵称】 {nickname}{level_str_pl4}{level_str_pl3}
-===详细信息===""")+MessageSegment.image(data_pic),at_sender=True)
+===详细信息===
+""")+MessageSegment.image(data_pic),at_sender=True)
 
 
 async def data2pic(nickname:str,userdata_pl4:dict,userdata_pl3:dict) -> bytes:
