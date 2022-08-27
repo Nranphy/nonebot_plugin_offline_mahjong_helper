@@ -8,7 +8,7 @@ __kirico_plugin_name__ = '此乃面麻小助手！！'
 
 __kirico_plugin_author__ = 'Nranphy'
 
-__kirico_plugin_version__ = '0.0.5'
+__kirico_plugin_version__ = '0.0.7'
 
 __kirico_plugin_repositorie__ = ''
 
