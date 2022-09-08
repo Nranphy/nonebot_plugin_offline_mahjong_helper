@@ -8,11 +8,11 @@ __kirico_plugin_name__ = '此乃面麻小助手！！'
 
 __kirico_plugin_author__ = 'Nranphy'
 
-__kirico_plugin_version__ = '0.0.9'
+__kirico_plugin_version__ = '0.0.10'
 
 __kirico_plugin_repositorie__ = ''
 
-__kirico_plugin_description__ = '某半途而废的小插件...没有人会用了啦！！'
+__kirico_plugin_description__ = '某面麻小插件...来成为现充吧！！'
 
 __kirico_plugin_usage__ = '''【/雀魂查询 xxx】按照指示对指定名称用户进行查询
 =========

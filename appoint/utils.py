@@ -244,12 +244,12 @@ def date_check(date:str) -> Tuple[bool,str]:
 
 
 async def get_group_member_card(group_id:Union[int,str], user_id:Union[int,str], no_cache:bool=False) -> str:
-    '''获取群成员的群名片，调用协议端api'''
+    '''获取群成员的称呼，调用协议端api'''
     bot = get_bot()
     group_id,user_id = int(group_id),int(user_id)
     try:
         info = await bot.call_api("get_group_member_info",group_id=group_id, user_id=user_id, no_cache=no_cache)
-        return info["card"]
+        return info["card"] if info["card"] else info["nickname"]
     except:return "隔壁牌友"
 
 def get_table_index() -> str:
