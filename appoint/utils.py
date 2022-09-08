@@ -1,13 +1,10 @@
-from nonebot import on_command, on_startswith, require, get_bot, get_driver
-from nonebot.typing import T_State
-from nonebot.params import State
-from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment, Message
+from nonebot import get_bot, get_driver
+from nonebot.adapters.onebot.v11 import MessageSegment, Message
 from nonebot.log import logger
-from typing import Any, List, Tuple, Union
+from typing import List, Tuple, Union
 import json
 import time
 from pathlib import Path
-from hashlib import md5
 
 data_path = Path(f"./data/mahjong_table/")
 valid_path = data_path / 'valid/'
@@ -24,10 +21,12 @@ try:
 except:
     logger.error("[约桌功能] 创建牌桌数据目录失败...")
 
-# 预约牌桌是否分群
+# 预约牌桌是否分群，默认为1
 offline_mahjong_group_divide = get_driver().config.offline_mahjong_group_divide if hasattr(get_driver().config, "offline_mahjong_group_divide") else 1
-# 加入牌桌上限人数，0为无限制
+# 加入牌桌上限人数，0为无限制，默认为4
 offline_mahjong_join_limit = get_driver().config.offline_mahjong_join_limit if hasattr(get_driver().config, "offline_mahjong_join_limit") else 4
+# 最后一人退出牌桌是否自动解散牌桌，默认为1
+offline_mahjong_last_one_quit = get_driver().config.offline_mahjong_last_one_quit if hasattr(get_driver().config, "offline_mahjong_last_one_quit") else 1
 
 
 def appoint_create(creator, group, place:str, date:str, qqs:list = [], sta_time:str="未定时间", end_time:str="未定时间", notes:str="无备注") -> Tuple[bool,Union[str,dict]]:
@@ -152,7 +151,7 @@ def quit_table(bolter,table:str) -> Tuple[bool,Union[str,dict]]:
         origin_data["qqs"].remove(int(bolter))
     except:
         return (False,"牌桌文件内容有误...")
-    if origin_data["qqs"]:
+    if origin_data["qqs"] or offline_mahjong_last_one_quit:
         with open(target_table,"w",encoding="UTF-8-sig") as f:
             f.truncate()
             json.dump(origin_data,f)
