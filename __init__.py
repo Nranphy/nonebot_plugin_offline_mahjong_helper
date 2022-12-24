@@ -16,7 +16,7 @@ __plugin_meta__ = PluginMetadata(
 ''',
     extra={
         "author": "Nranphy",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "repository": "https://github.com/Nranphy/nonebot_plugin_offline_mahjong_helper",
         "visible": True,
         "default_enable": True
