@@ -1,13 +1,10 @@
-from nonebot import on_command, on_startswith, require, get_bot, get_driver
+from nonebot import on_command, on_startswith
 from nonebot.typing import T_State
-from nonebot.params import State, CommandArg
-from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment, Message
-from nonebot.log import logger
-from typing import Any, List, Union
+from nonebot.params import CommandArg
+from nonebot.adapters.onebot.v11 import Bot, Event, Message
 import re
 import time
 import random
-from pathlib import Path
 
 from .utils import *
 from .schedule import *

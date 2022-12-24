@@ -1,6 +1,5 @@
 from nonebot import on_command
 from nonebot.typing import T_State
-from nonebot.params import State, CommandArg
 from nonebot.adapters.onebot.v11 import Bot, Event
 
 
