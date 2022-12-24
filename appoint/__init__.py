@@ -49,7 +49,7 @@ async def mahjong_appoint_help_process():
 
 
 @mahjong_appoint_guide.handle()
-async def mahjong_appoint_guide_process(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_guide_process(bot:Bot, event:Event, state:T_State):
     await mahjong_appoint_guide.send("请直接复制并改写以下表格新建约桌，请按照对应格式填写信息，带*项为必填信息。",at_sender=True)
     date_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())[:10]
     await mahjong_appoint_guide.send(
@@ -64,7 +64,7 @@ f'''【新建牌局】
     
 
 @mahjong_appoint_create.handle()
-async def mahjong_appoint_create_process(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_create_process(bot:Bot, event:Event, state:T_State):
     message = event.get_plaintext()
     try:
         place = re.search("(?<=【\*地点】).*$",message,re.U|re.M).group().strip()
@@ -83,7 +83,7 @@ async def mahjong_appoint_create_process(bot:Bot, event:Event, state:T_State=Sta
 
 
 @mahjong_appoint_join.handle()
-async def mahjong_appoint_join_process(bot:Bot, event:Event, state:T_State=State(), arg:Message=CommandArg()):
+async def mahjong_appoint_join_process(bot:Bot, event:Event, state:T_State, arg:Message=CommandArg()):
     table = arg.extract_plain_text().strip()
     if not table:
         await mahjong_appoint_join.finish("请在指令后跟上具体的牌桌编号，以区分各牌桌。\n如：【/加入牌桌 12345】")
@@ -97,7 +97,7 @@ async def mahjong_appoint_join_process(bot:Bot, event:Event, state:T_State=State
         await mahjong_appoint_join.send(at_message+f"您加入的牌局有新成员加入了，当前加入人数为{get_joiner_number(search_table(table)[1])}.")
 
 @mahjong_appoint_quit.handle()
-async def mahjong_appoint_quit_process(bot:Bot, event:Event, state:T_State=State(), arg:Message=CommandArg()):
+async def mahjong_appoint_quit_process(bot:Bot, event:Event, state:T_State, arg:Message=CommandArg()):
     table = arg.extract_plain_text().strip()
     if not table:
         await mahjong_appoint_quit.finish("请在指令后跟上具体的牌桌编号，以区分各牌桌。\n如：【/退出牌桌 12345】")
@@ -113,7 +113,7 @@ async def mahjong_appoint_quit_process(bot:Bot, event:Event, state:T_State=State
 
 
 @mahjong_appoint_list.handle()
-async def mahjong_appoint_list_process(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_list_process(bot:Bot, event:Event, state:T_State):
     table_info = select_table(group=event.group_id) # 这里可以加参数更改默认查询参数
     state["table_info"] = table_info
     head_text = "现在所有约桌如下\n=========\n"
@@ -129,7 +129,7 @@ async def mahjong_appoint_list_process(bot:Bot, event:Event, state:T_State=State
     await mahjong_appoint_list.send(head_text+body_text+foot_text,at_sender=True)
 
 @mahjong_appoint_list.got("index")
-async def mahjong_appoint_list_process_(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_list_process_(bot:Bot, event:Event, state:T_State):
     index = state["index"].extract_plain_text().strip()
     if not index.isdigit():
         await mahjong_appoint_list.finish()
@@ -147,7 +147,7 @@ async def mahjong_appoint_list_process_(bot:Bot, event:Event, state:T_State=Stat
 
 
 @mahjong_appoint_detail.handle()
-async def mahjong_appoint_detail_process(bot:Bot, event:Event, state:T_State=State(), arg:Message=CommandArg()):
+async def mahjong_appoint_detail_process(bot:Bot, event:Event, state:T_State, arg:Message=CommandArg()):
     table = arg.extract_plain_text().strip()
     if not table:
         await mahjong_appoint_join.finish("请在指令后跟上具体的牌桌编号，以区分各牌桌。\n如：【/牌桌细节 12345】")
@@ -173,7 +173,7 @@ async def mahjong_appoint_detail_process(bot:Bot, event:Event, state:T_State=Sta
 
 
 @mahjong_appoint_list_mine.handle()
-async def mahjong_appoint_list_process(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_list_process(bot:Bot, event:Event, state:T_State):
     table_info = select_table() # 这里可以加参数更改默认查询参数
     state["table_info"] = table_info
     head_text = "关于你的约桌如下\n=========\n"
@@ -191,7 +191,7 @@ async def mahjong_appoint_list_process(bot:Bot, event:Event, state:T_State=State
 
 
 @mahjong_appoint_list_query.handle()
-async def mahjong_appoint_list_query_process(bot:Bot, event:Event, state:T_State=State(), arg:Message=CommandArg()):
+async def mahjong_appoint_list_query_process(bot:Bot, event:Event, state:T_State, arg:Message=CommandArg()):
     parms = arg.extract_plain_text().strip().split()
     if not parms:
         await mahjong_appoint_list_query.finish("请在指令后加上具体的查询参数，目前支持日期、地址、QQ号的查询，格式为对应信息名与内容交替\n如：【/查询约桌 日期 1970-01-01 地点 渝中 QQ 123456】",at_sender=True)
@@ -233,7 +233,7 @@ async def mahjong_appoint_list_query_process(bot:Bot, event:Event, state:T_State
     await mahjong_appoint_list_query.send(head_text+body_text+foot_text,at_sender=True)
 
 @mahjong_appoint_list_query.got("index")
-async def mahjong_appoint_list_process_(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_list_process_(bot:Bot, event:Event, state:T_State):
     index = state["index"].extract_plain_text().strip()
     if not index.isdigit():
         await mahjong_appoint_list_query.finish()
@@ -251,7 +251,7 @@ async def mahjong_appoint_list_process_(bot:Bot, event:Event, state:T_State=Stat
 
 
 @mahjong_appoint_dissolve.handle()
-async def mahjong_appoint_dissolve_process(bot:Bot, event:Event, state:T_State=State(), arg:Message=CommandArg()):
+async def mahjong_appoint_dissolve_process(bot:Bot, event:Event, state:T_State, arg:Message=CommandArg()):
     table = arg.extract_plain_text().strip()
     if not table:
         await mahjong_appoint_join.finish("请在指令后跟上具体的牌桌编号，以区分各牌桌。\n如：【/加入牌桌 12345】")
@@ -271,7 +271,7 @@ async def mahjong_appoint_dissolve_process(bot:Bot, event:Event, state:T_State=S
         state["sure"] = state["random_str"]
 
 @mahjong_appoint_dissolve.got("sure")
-async def mahjong_appoint_dissolve_process_(bot:Bot, event:Event, state:T_State=State()):
+async def mahjong_appoint_dissolve_process_(bot:Bot, event:Event, state:T_State):
     if isinstance(state["sure"],Message):
         state["sure"] = state["sure"].extract_plain_text().strip()
     if state["sure"] != state["random_str"]:

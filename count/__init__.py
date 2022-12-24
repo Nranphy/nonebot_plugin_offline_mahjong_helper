@@ -14,7 +14,7 @@ han_fu_2_point = on_command("算点",aliases={"算分"} ,priority=10,block=True)
 
 # 将符和番输入得到点数
 @han_fu_2_point.handle()
-async def parse1(bot:Bot, event:Event, state:T_State = State()):
+async def parse1(bot:Bot, event:Event, state:T_State):
     msg = str(event.get_message()).split()
     try:
         state["han"] = min(int(msg[1]),int(msg[2]))
@@ -23,7 +23,7 @@ async def parse1(bot:Bot, event:Event, state:T_State = State()):
         await han_fu_2_point.finish("\n番、符输入格式有误×\n请检查是否用空格分隔指令。\n例：/算点 4 40", at_sender = True)
 
 @han_fu_2_point.handle()
-async def han_fu_2_point_action(bot:Bot, event:Event, state:T_State = State()):
+async def han_fu_2_point_action(bot:Bot, event:Event, state:T_State):
     temp = point_counter(state["fu"], state["han"])
     if temp[0]:
         msg = f"\n点数计算成功√\n==={temp[3]}===\n【亲家和牌】荣和 {temp[1][0]} ，自摸 {temp[1][1]} \n【子家和牌】荣和 {temp[2][0]} ，自摸 {temp[2][1]} \n===计算完成~==="
@@ -35,7 +35,7 @@ async def han_fu_2_point_action(bot:Bot, event:Event, state:T_State = State()):
 
 # 精算点计算
 @actuarial_point.handle()
-async def parse2(bot:Bot, event:Event, state:T_State = State()):
+async def parse2(bot:Bot, event:Event, state:T_State):
     try:
         temp = str(event.get_message()).split()[1:]
         temp = sorted([int(x) for x in temp], reverse=True)
@@ -50,7 +50,7 @@ async def parse2(bot:Bot, event:Event, state:T_State = State()):
         await actuarial_point.finish("\n计分指令格式有误×\n请检查点数个数并用空格分隔指令。\n例：/计分 31000 24000 27000 18000", at_sender = True)
 
 @actuarial_point.handle()
-async def jisuan(bot:Bot, event:Event, state:T_State = State()):
+async def jisuan(bot:Bot, event:Event, state:T_State):
     shunweimadian = [+15,+5,-5,-15]
     state["ac_point"] = list() # 记录精算点的列表
     for i in range(4):
